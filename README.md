@@ -21,11 +21,16 @@
 
 ## Clone the Project
 ```powershell
-git clone --recurse-submodules https://gitlab.hof-university.de/event-planning/infrastructure.git
-cd Event-Planning
+git clone --recurse-submodules https://gitlab.hof-university.de/events/infrastructure.git
+cd infrastructure
 ```
 
 ## Start the Project
+
+### Environment Variables
+- Copy the .env.example
+- Rename it to .env
+- Fill in the required values (e.g., database credentials, JWT secret)
 ### Development mode (hot reload)
 ```powershell
 docker compose -f docker-compose.dev.yml up --build
