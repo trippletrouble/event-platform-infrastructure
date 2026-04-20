@@ -1,0 +1,60 @@
+services:
+  postgres:
+    image: postgres:13.5
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=***ENTFERNT***
+      - POSTGRES_DB=event_db
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d event_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+      - '5432:5432'
+    networks:
+      - events
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    profiles:
+      - 'db-standalone'
+      - ''
+
+
+  nestjs:
+    env_file:
+      - ./backend/.env
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    environment:
+      - DATABASE_URL=postgres://user:***@postgres:5432/event_db
+    volumes:
+      - uploads:/app/uploads
+    ports:
+      - '3100:3100'
+    networks:
+      - events
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+    profiles:
+      - 'backend-standalone'
+      - ''
+
+  nextjs:
+    build: ./frontend
+    ports:
+      - '3000:3000'
+    networks:
+      - events
+    profiles:
+      - 'frontend-standalone'
+      - ''
+networks:
+  events:
+    driver: bridge
+volumes:
+  uploads:
+  postgres:
