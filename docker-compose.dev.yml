@@ -1,0 +1,66 @@
+services:
+  postgres:
+    image: postgres:13.5
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=event_db
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d event_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+      - '5432:5432'
+    networks:
+      - events
+    volumes:
+      - postgres:/var/lib/postgresql/data
+
+
+  nestjs:
+    image: node:22-alpine
+    working_dir: /app
+    env_file:
+      - ./backend/.env
+    environment:
+      - DATABASE_URL=postgres://user:password@postgres:5432/event_db
+    volumes:
+      - ./backend:/app
+      - backend_node_modules:/app/node_modules
+      - uploads:/app/uploads
+    ports:
+      - '3100:3100'
+    networks:
+      - events
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: sh -c "npm install && npx prisma generate && npx prisma migrate deploy && npm run start:dev"
+
+  nextjs:
+    image: node:22-alpine
+    working_dir: /app
+    environment:
+      - NODE_ENV=development
+      - WATCHPACK_POLLING=true
+    volumes:
+      - ./frontend:/app
+      - frontend_node_modules:/app/node_modules
+    ports:
+      - '3000:3000'
+    networks:
+      - events
+    depends_on:
+      - nestjs
+    command: sh -c "npm install && npm run dev"
+
+networks:
+  events:
+    driver: bridge
+
+volumes:
+  uploads:
+  postgres:
+  backend_node_modules:
+  frontend_node_modules:
