@@ -2,16 +2,16 @@ services:
   postgres:
     image: postgres:13.5
     environment:
-      - POSTGRES_USER=user
-      - POSTGRES_PASSWORD=***ENTFERNT***
-      - POSTGRES_DB=event_db
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U user -d event_db"]
       interval: 10s
       timeout: 5s
       retries: 5
     ports:
-      - '5432:5432'
+      - '${POSTGRES_PORT}:5432'
     networks:
       - events
     volumes:
@@ -28,11 +28,11 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     environment:
-      - DATABASE_URL=postgres://user:***@postgres:5432/event_db
+      - DATABASE_URL=${DATABASE_URL}
     volumes:
       - uploads:/app/uploads
     ports:
-      - '3100:3100'
+      - '${BACKEND_PORT}:3100'
     networks:
       - events
     depends_on:
@@ -46,7 +46,7 @@ services:
   nextjs:
     build: ./frontend
     ports:
-      - '3000:3000'
+      - '${FRONTEND_PORT}:3000'
     networks:
       - events
     profiles:
