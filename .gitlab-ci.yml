@@ -13,8 +13,8 @@ backend-build:
     untracked: true
   script:
     - cd backend
-    - npm ci
     - ls -la
+    - npm ci
   #only:
   #  - main
   #  - dev
@@ -45,8 +45,8 @@ frontend-build:
   image: node:latest
   script:
     - cd frontend
-    - npm ci
     - ls -la
+    - npm ci
   artifacts:
     untracked: true
 
