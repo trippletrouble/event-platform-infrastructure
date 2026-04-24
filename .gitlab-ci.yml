@@ -1,11 +1,6 @@
 stages:
   - build
   - test
-  - deploy
-
-variables:
-  npm_config_proxy: http://proxy.hof-university.de:3128
-  npm_config_https_proxy: http://proxy.hof-university.de:3128
 
 # ──────────────────────────────────────────────
 # Backend
@@ -14,23 +9,18 @@ variables:
 backend-build:
   stage: build
   image: node:latest
-  rules:
-    - changes:
-        - backend/**/*
+  artifacts:
+    untracked: true
   script:
     - cd backend
     - npm ci
-  artifacts:
-    paths:
-      - backend/node_modules/
-    expire_in: 1 hour
+  #only:
+  #  - main
+  #  - dev
 
-backend-test:
+backend-unit-test:
   stage: test
   image: node:latest
-  rules:
-    - changes:
-        - backend/**/*
   dependencies:
     - backend-build
   script:
@@ -52,25 +42,15 @@ backend-test:
 frontend-build:
   stage: build
   image: node:latest
-  rules:
-    - changes:
-        - frontend/**/*
   script:
     - cd frontend
     - npm ci
   artifacts:
-    paths:
-      - frontend/node_modules/
-      - frontend/.next/
-    expire_in: 1 hour
+    untracked: true
 
-frontend-test:
+frontend-unit-test:
   stage: test
-  allow_failure: true
   image: node:latest
-  rules:
-    - changes:
-        - frontend/**/*
   dependencies:
     - frontend-build
   script:
@@ -84,25 +64,3 @@ frontend-test:
     reports:
       junit:
         - frontend/junit.xml
-
-# ──────────────────────────────────────────────
-# Deploy
-# ──────────────────────────────────────────────
-
-deploy:
-  stage: deploy
-  needs:
-    - job: backend-test
-      optional: true
-    - job: frontend-test
-      optional: true
-  rules:
-    - if: $CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "dev"
-  tags:
-    - shell
-  script:
-    - cd /path/to/your/project
-    - git pull origin $CI_COMMIT_BRANCH
-    - docker compose down
-    - docker compose build --no-cache
-    - docker compose up -d
