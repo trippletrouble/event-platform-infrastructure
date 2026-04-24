@@ -25,6 +25,7 @@ backend-unit-test:
   dependencies:
     - backend-build
   script:
+    - ls -la
     - cd backend
     - npm run test:ci
   coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/
@@ -44,6 +45,7 @@ frontend-build:
   stage: build
   image: node:latest
   script:
+    - ls -la
     - cd frontend
     - ls -la
     - npm ci
