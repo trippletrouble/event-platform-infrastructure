@@ -1,3 +1,7 @@
+variables:
+  GIT_SUBMODULE_STRATEGY: recursive
+  GIT_SUBMODULE_FORCE_HTTPS: "true"
+
 stages:
   - build
   - test
@@ -13,7 +17,6 @@ backend-build:
     untracked: true
   script:
     - cd backend
-    - ls -la
     - npm ci
   #only:
   #  - main
@@ -25,7 +28,6 @@ backend-unit-test:
   dependencies:
     - backend-build
   script:
-    - ls -la
     - cd backend
     - npm run test:ci
   coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/
@@ -45,9 +47,7 @@ frontend-build:
   stage: build
   image: node:latest
   script:
-    - ls -la
     - cd frontend
-    - ls -la
     - npm ci
   artifacts:
     untracked: true
