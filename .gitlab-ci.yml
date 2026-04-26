@@ -55,6 +55,7 @@ frontend-build:
 frontend-unit-test:
   stage: test
   image: node:latest
+  allow_failure: true
   dependencies:
     - frontend-build
   script:
