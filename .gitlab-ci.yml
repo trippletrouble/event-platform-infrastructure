@@ -29,6 +29,7 @@ backend-unit-test:
     - backend-build
   script:
     - cd backend
+    - npm ci
     - npm run test:ci
   coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/
   artifacts:
@@ -60,6 +61,7 @@ frontend-unit-test:
     - frontend-build
   script:
     - cd frontend
+    - npm ci
     - npm run test:ci
    # - npm run test:contrast
   coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/
