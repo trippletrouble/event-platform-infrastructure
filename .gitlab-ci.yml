@@ -60,6 +60,7 @@ frontend-unit-test:
   script:
     - cd frontend
     - npm run test:ci
+    - npm run test:contrast
   coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/
   artifacts:
     paths:
