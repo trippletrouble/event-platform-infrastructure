@@ -1,0 +1,75 @@
+variables:
+  GIT_SUBMODULE_STRATEGY: recursive
+  GIT_SUBMODULE_FORCE_HTTPS: "true"
+
+stages:
+  - build
+  - test
+
+# ──────────────────────────────────────────────
+# Backend
+# ──────────────────────────────────────────────
+
+backend-build:
+  stage: build
+  image: node:latest
+  artifacts:
+    untracked: true
+  script:
+    - cd backend
+    - npm ci
+  #only:
+  #  - main
+  #  - dev
+
+backend-unit-test:
+  stage: test
+  image: node:latest
+  dependencies:
+    - backend-build
+  script:
+    - cd backend
+    - npm ci
+    - npm run test:ci
+  coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/
+  artifacts:
+    paths:
+      - backend/coverage/
+    when: always
+    reports:
+      junit:
+        - backend/junit.xml
+
+# ──────────────────────────────────────────────
+# Frontend
+# ──────────────────────────────────────────────
+
+frontend-build:
+  stage: build
+  image: node:latest
+  script:
+    - cd frontend
+    - npm ci
+  artifacts:
+    untracked: true
+
+frontend-unit-test:
+  stage: test
+  image: node:latest
+  allow_failure: true
+  dependencies:
+    - frontend-build
+  script:
+    - cd frontend
+    - npm ci
+    - npm run test:ci
+    - npm run test:contrast
+    - npm run test:a11y
+  coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/
+  artifacts:
+    paths:
+      - frontend/coverage/
+    when: always
+    reports:
+      junit:
+        - frontend/junit.xml
