@@ -53,7 +53,7 @@ Der Mock-Server ersetzt das echte Backend durch ein fake während der Entwicklun
 
 - Deine Node.js Version muss mindestens v22.12 oder höher sein !
 [Link zum herunterladen der Node.js Version](https://nodejs.org/de)
-- Im Root-Ordner(das bedeutet in der Infrastructure) einmal 
+- Im bachend einmal 
 ```bash
 npm install
 ```
@@ -61,7 +61,7 @@ npm install
 
 ### Starten der Mock servers
 
-- Im Root-Ordner(das bedeutet in der Infrastructure)
+- Im backend
 ```bash
 npm run mock
 ```
@@ -77,7 +77,6 @@ npm run start:dev
 - um Ressourcen zu sparen sollte man nun NestJS wieder stoppen dafür **Strg + C** im Terminal drücken, dann wieder normal
 
 ```bash
-cd ..
 npm run mock
 ```
 - ausführen
