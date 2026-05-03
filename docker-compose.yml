@@ -58,3 +58,16 @@ networks:
 volumes:
   uploads:
   postgres:
+
+  prism:
+    image: stoplight/prism:4
+    command: mock /tmp/swagger.yml --host 0.0.0.0 --port 4010
+    volumes:
+      - ./backend/swagger.yml:/tmp/swagger.yml
+    ports:
+      - '4010:4010'
+    networks:
+      - events
+    profiles:
+      - 'mock'
+      - ''
