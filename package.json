@@ -1,8 +1,0 @@
-{
-  "scripts": {
-    "mock": "prism mock ./backend/swagger.yml --port 4010"
-  },
-  "devDependencies": {
-    "@stoplight/prism-cli": "^5.14.2"
-  }
-}
