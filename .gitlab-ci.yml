@@ -29,6 +29,7 @@ backend-unit-test:
     - backend-build
   variables:
     POSTGRES_URL: "postgresql://localhost:5432/placeholder"
+    NODE_ENV: "test"
   script:
     - cd backend
     - npm ci
