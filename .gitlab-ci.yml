@@ -30,6 +30,14 @@ backend-unit-test:
   variables:
     POSTGRES_URL: "postgresql://localhost:5432/placeholder"
     NODE_ENV: "test"
+    PORT: "3000"
+    FRONTEND_URL: "http://localhost:3000"
+    OIDC_ISSUER: "placeholder"
+    OIDC_CLIENT_ID: "placeholder"
+    OIDC_CLIENT_SECRET: ***ENTFERNT***
+    OIDC_CALLBACK_URL: "placeholder"
+    JWT_SECRET: ***ENTFERNT***
+    JWT_EXPIRATION: "1h"
   script:
     - cd backend
     - npm ci
