@@ -30,6 +30,7 @@ backend-unit-test:
   script:
     - cd backend
     - npm ci
+    - npx prisma generate
     - npm run test:ci
   coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/
   artifacts:
