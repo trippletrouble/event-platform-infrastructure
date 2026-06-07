@@ -27,6 +27,8 @@ backend-unit-test:
   image: node:latest
   dependencies:
     - backend-build
+  variables:
+    POSTGRES_URL: "postgresql://localhost:5432/placeholder"
   script:
     - cd backend
     - npm ci
