@@ -28,7 +28,7 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     environment:
-      - DATABASE_URL=${DATABASE_URL}
+      - DATABASE_URL=${POSTGRES_URL}
     volumes:
       - uploads:/app/uploads
     ports:
