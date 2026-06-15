@@ -1,3 +1,9 @@
+workflow:
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS'
+      when: never
+    - if: '$CI_COMMIT_BRANCH'
 variables:
   GIT_SUBMODULE_STRATEGY: recursive
   GIT_SUBMODULE_FORCE_HTTPS: "true"
@@ -12,7 +18,7 @@ stages:
 
 backend-build:
   stage: build
-  image: node:latest
+  image: node:20-alpine
   artifacts:
     untracked: true
   script:
@@ -24,12 +30,24 @@ backend-build:
 
 backend-unit-test:
   stage: test
-  image: node:latest
+  image: node:20-alpine
   dependencies:
     - backend-build
+  variables:
+    POSTGRES_URL: "postgresql://localhost:5432/placeholder"
+    NODE_ENV: "test"
+    PORT: "3000"
+    FRONTEND_URL: "http://localhost:3000"
+    OIDC_ISSUER: "placeholder"
+    OIDC_CLIENT_ID: "placeholder"
+    OIDC_CLIENT_SECRET: ***ENTFERNT***
+    OIDC_CALLBACK_URL: "placeholder"
+    JWT_SECRET: ***ENTFERNT***
+    JWT_EXPIRATION: "1h"
   script:
     - cd backend
     - npm ci
+    - npx prisma generate
     - npm run test:ci
   coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/
   artifacts:
@@ -46,7 +64,7 @@ backend-unit-test:
 
 frontend-build:
   stage: build
-  image: node:latest
+  image: node:20-alpine
   script:
     - cd frontend
     - npm ci
@@ -55,7 +73,7 @@ frontend-build:
 
 frontend-unit-test:
   stage: test
-  image: node:latest
+  image: node:20-alpine
   allow_failure: true
   dependencies:
     - frontend-build
@@ -73,3 +91,15 @@ frontend-unit-test:
     reports:
       junit:
         - frontend/junit.xml
+
+frontend-lint:
+  stage: test
+  image: node:20-alpine
+  allow_failure: true
+  dependencies:
+    - frontend-build
+  script:
+    - cd frontend
+    - npm ci
+    - ./node_modules/.bin/eslint . --max-warnings 0
+    - ./node_modules/.bin/tsc --noEmit
