@@ -28,7 +28,7 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     environment:
-      - DATABASE_URL=${DATABASE_URL}
+      - DATABASE_URL=${POSTGRES_URL}
     volumes:
       - uploads:/app/uploads
     ports:
@@ -43,6 +43,19 @@ services:
       - 'backend-standalone'
       - ''
 
+  prism:
+    image: stoplight/prism:4
+    command: mock /tmp/swagger.yml --host 0.0.0.0 --port 4010
+    volumes:
+      - ./backend/docs/swagger.yml:/tmp/swagger.yml
+    ports:
+      - '4010:4010'
+    networks:
+      - events
+    profiles:
+      - 'mock'
+      - ''
+
   nextjs:
     build: ./frontend
     ports:
@@ -52,6 +65,7 @@ services:
     profiles:
       - 'frontend-standalone'
       - ''
+
 networks:
   events:
     driver: bridge

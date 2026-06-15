@@ -44,3 +44,57 @@ docker compose up --build
 ```
 - Frontend: `http://localhost:3000`
 - Backend: `http://localhost:3100`
+
+## Mock Server
+
+Der Mock-Server ersetzt das echte Backend durch ein fake während der Entwicklung, um diese zu vereinfachen und backend und frondend Entwicklung von einander zu trennen.
+
+### Voraussetzungen
+
+- Deine Node.js Version muss mindestens v22.12 oder höher sein !
+[Link zum herunterladen der Node.js Version](https://nodejs.org/de)
+- Im bachend einmal 
+```bash
+npm install
+```
+- ausführen 
+
+### Starten der Mock servers
+
+- Im backend
+```bash
+npm run mock
+```
+- ausführen. Der Server läuft dann auf `http://localhost:4010`.
+
+- **Wenn Änderungen am Backend gemacht wurden dann muss erst noch die `swagger.yml` neu generiert werden** um den Mock server zu starten, das bedeutet das man erst:
+
+```bash
+cd backend
+npm run start:dev
+```
+- machen muss um die `swagger.yml` zu aktualisieren(neu zu generieren)
+- um Ressourcen zu sparen sollte man nun NestJS wieder stoppen dafür **Strg + C** im Terminal drücken, dann wieder normal
+
+```bash
+npm run mock
+```
+- ausführen
+
+### Mit Docker Starten
+
+#### Der Unterschied:
+- `npm run mock` → Prism läuft direkt auf deinem Computer
+- `docker compose up prism` → Prism läuft in einem Container, zusammen mit den anderen Services (Postgres, NestJS, Next.js)
+
+```bash
+docker compose up prism
+```
+
+### Zwischen Mock und echtem Backend wechseln
+
+In der `.env` Datei im Frontend-Ordner die URL anpassen:
+
+- **Mock-Server nutzen** NEXT_PUBLIC_API_URL=http://localhost:**4010**
+
+- **Echtes Backend nutzen** NEXT_PUBLIC_API_URL=http://localhost:**3100**
