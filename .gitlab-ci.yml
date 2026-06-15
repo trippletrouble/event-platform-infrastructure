@@ -12,7 +12,7 @@ stages:
 
 backend-build:
   stage: build
-  image: node:latest
+  image: node:20-alpine
   artifacts:
     untracked: true
   script:
@@ -24,7 +24,7 @@ backend-build:
 
 backend-unit-test:
   stage: test
-  image: node:latest
+  image: node:20-alpine
   dependencies:
     - backend-build
   variables:
@@ -58,7 +58,7 @@ backend-unit-test:
 
 frontend-build:
   stage: build
-  image: node:latest
+  image: node:20-alpine
   script:
     - cd frontend
     - npm ci
@@ -67,7 +67,7 @@ frontend-build:
 
 frontend-unit-test:
   stage: test
-  image: node:latest
+  image: node:20-alpine
   allow_failure: true
   dependencies:
     - frontend-build
@@ -85,3 +85,13 @@ frontend-unit-test:
     reports:
       junit:
         - frontend/junit.xml
+
+frontend-lint:
+  stage: test
+  image: node:20-alpine
+  dependencies:
+    - frontend-build
+  script:
+    - cd frontend
+    - ./node_modules/.bin/eslint . --max-warnings 0
+    - ./node_modules/.bin/tsc --noEmit
