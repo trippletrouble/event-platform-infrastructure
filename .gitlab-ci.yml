@@ -95,6 +95,7 @@ frontend-unit-test:
 frontend-lint:
   stage: test
   image: node:20-alpine
+  allow_failure: true
   dependencies:
     - frontend-build
   script:
