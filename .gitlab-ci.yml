@@ -99,5 +99,6 @@ frontend-lint:
     - frontend-build
   script:
     - cd frontend
+    - npm ci
     - ./node_modules/.bin/eslint . --max-warnings 0
     - ./node_modules/.bin/tsc --noEmit
