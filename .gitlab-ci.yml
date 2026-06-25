@@ -19,8 +19,6 @@ stages:
 backend-build:
   stage: build
   image: node:20-alpine
-  artifacts:
-    untracked: true
   script:
     - cd backend
     - npm ci
@@ -68,8 +66,6 @@ frontend-build:
   script:
     - cd frontend
     - npm ci
-  artifacts:
-    untracked: true
 
 frontend-unit-test:
   stage: test
