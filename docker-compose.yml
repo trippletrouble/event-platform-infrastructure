@@ -54,9 +54,11 @@ services:
       - events
     profiles:
       - 'mock'
-      - ''
 
   nextjs:
+    image: node:24-alpine
+    env_file:
+      - ./frontend/.env
     build: ./frontend
     ports:
       - '${FRONTEND_PORT}:3000'
@@ -78,7 +80,7 @@ services:
       timeout: 5s
       retries: 5
     ports:
-      - '${MINIO_PORT:-9000}:9000'
+      - '${MINIO_PORT}:9000'
       - '9001:9001'
     networks:
       - events
