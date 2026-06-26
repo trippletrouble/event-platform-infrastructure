@@ -1,0 +1,257 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Lexend:wght@600;700&display=swap');
+
+/* Global Reset & Page Styling */
+body {
+    background-color: #050505 !important;
+    background-image: radial-gradient(circle at 50% 50%, #121215 0%, #050505 100%) !important;
+    color: #F8FAFC !important;
+    font-family: 'Inter', sans-serif !important;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Page Wrapper */
+.login-pf-page {
+    background: transparent !important;
+    width: 100%;
+    max-width: 480px;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* Header / Title Styling */
+#kc-header {
+    display: none !important; /* Hide default generic header */
+}
+
+#kc-header-wrapper {
+    display: none !important;
+}
+
+.login-pf-page .login-pf-header {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+#kc-page-title {
+    font-family: 'Lexend', sans-serif !important;
+    font-size: 28px !important;
+    font-weight: 700 !important;
+    color: #F8FAFC !important;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    letter-spacing: -0.02em;
+}
+
+/* Brand Text Subheading */
+.login-pf-page .login-pf-header::after {
+    content: "Hochschulmesse Event Portal";
+    display: block;
+    font-size: 14px;
+    color: #94A3B8;
+    font-weight: 500;
+    margin-top: 6px;
+    font-family: 'Inter', sans-serif;
+}
+
+/* Card / Box Styling */
+.card-pf {
+    background-color: #0F0F11 !important;
+    border: 2px solid #2D2D30 !important;
+    border-radius: 6px !important; /* rounded-md */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6) !important;
+    padding: 40px !important;
+    margin-top: 0 !important;
+    max-width: 100% !important;
+}
+
+/* Form Grouping & Labels */
+.form-group {
+    margin-bottom: 20px !important;
+}
+
+label.control-label {
+    font-family: 'Inter', sans-serif !important;
+    color: #94A3B8 !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 8px !important;
+    display: block;
+}
+
+/* Input Fields Styling */
+.form-control {
+    background-color: #1A1A1E !important;
+    border: 1px solid #2D2D30 !important;
+    border-radius: 6px !important;
+    color: #F8FAFC !important;
+    font-family: 'Inter', sans-serif !important;
+    font-size: 14px !important;
+    padding: 12px 16px !important;
+    height: auto !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+/* Input Focus Overrides (as per Design Guide) */
+.form-control:focus {
+    border-color: #EAB308 !important; /* Brand Yellow */
+    box-shadow: none !important; /* Disable default glow ring */
+    outline: none !important;
+}
+
+/* Buttons Styling */
+.btn-primary {
+    background-color: #EAB308 !important; /* var(--color-primary) */
+    background-image: none !important;
+    border: none !important;
+    border-radius: 6px !important;
+    color: #050505 !important; /* High contrast black */
+    font-family: 'Lexend', sans-serif !important;
+    font-size: 15px !important;
+    font-weight: 600 !important;
+    padding: 12px 24px !important;
+    width: 100% !important;
+    cursor: pointer !important;
+    transition: transform 0.1s ease, background-color 0.2s ease !important;
+}
+
+.btn-primary:hover {
+    background-color: #FCCD01 !important; /* var(--color-brand-yellow) */
+}
+
+.btn-primary:active {
+    transform: scale(0.98) !important;
+}
+
+.btn-primary:focus {
+    outline: 2px solid #EAB308 !important;
+    outline-offset: 2px !important;
+    box-shadow: none !important;
+}
+
+/* Focus rings for links to meet WCAG AA */
+a:focus-visible {
+    outline: 2px solid #EAB308 !important;
+    outline-offset: 2px !important;
+}
+
+/* Auxiliary Navigation (Forgot Password, Registration links) */
+#kc-form-options {
+    margin-bottom: 15px;
+    font-size: 13px;
+}
+
+#kc-form-options a {
+    color: #60A5FA !important; /* Accessible blue on dark theme (7.27:1 contrast) */
+    text-decoration: none !important;
+    transition: color 0.2s ease;
+}
+
+#kc-form-options a:hover {
+    color: #93C5FD !important;
+    text-decoration: underline !important;
+}
+
+.login-pf-signup {
+    margin-top: 24px;
+    text-align: center;
+    font-size: 14px;
+    color: #94A3B8;
+    border-top: 1px solid #2D2D30;
+    padding-top: 20px;
+}
+
+.login-pf-signup a {
+    color: #EAB308 !important; /* Brand Yellow Link (9.45:1 contrast) */
+    font-weight: 600;
+    text-decoration: none !important;
+    margin-left: 4px;
+}
+
+.login-pf-signup a:hover {
+    text-decoration: underline !important;
+    color: #FCCD01 !important;
+}
+
+/* Checkbox Styling */
+input[type="checkbox"] {
+    accent-color: #EAB308 !important;
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    vertical-align: middle;
+    margin-right: 6px;
+}
+
+/* Alert Notification Customization (Errors, Messages) */
+.alert {
+    padding: 15px !important;
+    margin-bottom: 20px !important;
+    border-radius: 6px !important;
+    font-size: 13px !important;
+    font-family: 'Inter', sans-serif !important;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+/* Error alert styling */
+.alert-error {
+    background-color: rgba(254, 61, 78, 0.1) !important;
+    border: 1px solid #FE3D4E !important; /* var(--color-brand-red) - 5.36:1 contrast */
+    color: #FE3D4E !important;
+}
+
+/* Success alert styling */
+.alert-success {
+    background-color: rgba(10, 216, 142, 0.1) !important;
+    border: 1px solid #0AD88E !important; /* var(--color-brand-green) - 10.2:1 contrast */
+    color: #0AD88E !important;
+}
+
+/* Warning alert styling */
+.alert-warning {
+    background-color: rgba(234, 179, 8, 0.1) !important;
+    border: 1px solid #EAB308 !important; /* var(--color-primary) - 9.45:1 contrast */
+    color: #EAB308 !important;
+}
+
+/* Info alert styling */
+.alert-info {
+    background-color: rgba(96, 165, 250, 0.1) !important;
+    border: 1px solid #60A5FA !important; /* Accessible blue - 7.27:1 contrast */
+    color: #60A5FA !important;
+}
+
+/* Hide default Keycloak alert icons to allow clean typography */
+.alert .pficon {
+    display: none !important;
+}
+
+.alert-text {
+    margin: 0 !important;
+}
+
+/* Footer / Language switchers (optional, usually hidden in clean setups) */
+#kc-locale {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 12px;
+}
+
+#kc-locale-dropdown-link {
+    color: #94A3B8 !important;
+    text-decoration: none;
+}
+
+#kc-locale-dropdown-link:hover {
+    color: #F8FAFC !important;
+}

@@ -66,6 +66,26 @@ services:
       - 'frontend-standalone'
       - ''
 
+  keycloak:
+    image: quay.io/keycloak/keycloak:24.0.1
+    command: start-dev --import-realm
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=***ENTFERNT***
+      - KC_HOSTNAME_STRICT=false
+      - KC_HOSTNAME_STRICT_HTTPS=false
+      - KC_HTTP_ENABLED=true
+    ports:
+      - '8080:8080'
+    volumes:
+      - ./keycloak/import:/opt/keycloak/data/import:ro
+      - ./keycloak/themes:/opt/keycloak/themes
+    networks:
+      - events
+    depends_on:
+      postgres:
+        condition: service_healthy
+
 networks:
   events:
     driver: bridge
