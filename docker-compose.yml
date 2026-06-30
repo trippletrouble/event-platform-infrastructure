@@ -29,6 +29,8 @@ services:
       dockerfile: Dockerfile
     environment:
       - DATABASE_URL=${POSTGRES_URL}
+    extra_hosts:
+      - "auth.ocaens.de:host-gateway"
     volumes:
       - uploads:/app/uploads
     ports:
