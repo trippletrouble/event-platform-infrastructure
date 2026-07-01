@@ -82,8 +82,8 @@ frontend-unit-test:
     - cd frontend
     - npm ci
     - npm run test:ci
-    - npm run test:contrast
-    - npm run test:a11y
+    - npx jest src/__tests__/contrast.test.ts
+    - npx jest src/__tests__/a11y.test.tsx
   coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/
   artifacts:
     paths:
