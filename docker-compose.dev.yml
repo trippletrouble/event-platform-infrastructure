@@ -7,7 +7,7 @@ services:
       - POSTGRES_DB=${POSTGRES_DB}
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U user -d event_db"]
-      interval: 10s
+      interval: 5s
       timeout: 5s
       retries: 5
     ports:
@@ -16,6 +16,9 @@ services:
       - events
     volumes:
       - postgres:/var/lib/postgresql/data
+    profiles:
+      - 'db-standalone'
+      - ''
 
 
   nestjs:
@@ -24,7 +27,7 @@ services:
     env_file:
       - ./backend/.env
     environment:
-      - DATABASE_URL=${DATABASE_URL}
+      - DATABASE_URL=${POSTGRES_URL}
     volumes:
       - ./backend:/app
       - backend_node_modules:/app/node_modules
@@ -36,7 +39,22 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-    command: sh -c "npm install && npx prisma generate && npx prisma migrate deploy && npm run start:dev"
+    command: sh -c "npm install && npx prisma generate && npx prisma migrate deploy && rm -f tsconfig.build.tsbuildinfo && npm run start:dev"
+    profiles:
+      - 'backend-standalone'
+      - ''
+
+  prism:
+    image: stoplight/prism:4
+    command: mock /tmp/swagger.yml --host 0.0.0.0 --port 4010
+    volumes:
+      - ./backend/docs/swagger.yml:/tmp/swagger.yml
+    ports:
+      - '4010:4010'
+    networks:
+      - events
+    profiles:
+      - 'mock'
 
   nextjs:
     image: node:22-alpine
@@ -54,6 +72,31 @@ services:
     depends_on:
       - nestjs
     command: sh -c "npm install && npm run dev"
+    profiles:
+      - 'frontend-standalone'
+      - ''
+
+  minio:
+    image: minio/minio:latest
+    command: server /data --console-address ":9001"
+    environment:
+      - MINIO_ROOT_USER=${MINIO_ACCESS_KEY}
+      - MINIO_ROOT_PASSWORD=${MINIO_SECRET_KEY}
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+      - '${MINIO_PORT:-9000}:9000'
+      - '9001:9001'
+    networks:
+      - events
+    volumes:
+      - minio:/data
+    profiles:
+      - 'minio-standalone'
+      - ''
 
 networks:
   events:
@@ -62,5 +105,6 @@ networks:
 volumes:
   uploads:
   postgres:
+  minio:
   backend_node_modules:
   frontend_node_modules:
