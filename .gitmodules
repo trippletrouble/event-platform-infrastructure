@@ -4,6 +4,3 @@
 [submodule "backend"]
 	path = backend
 	url = https://gitlab.hof-university.de/events/backend.git
-[submodule "management"]
-	path = management
-	url = https://gitlab.hof-university.de/events/management.git
