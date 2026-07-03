@@ -29,8 +29,8 @@ services:
       dockerfile: Dockerfile
     environment:
       - DATABASE_URL=${POSTGRES_URL}
-    extra_hosts:
-      - "auth.ocaens.de:host-gateway"
+    #extra_hosts:
+    #  - "auth.ocaens.de:host-gateway"
     volumes:
       - uploads:/app/uploads
     ports:
@@ -56,7 +56,6 @@ services:
       - events
     profiles:
       - 'mock'
-      - ''
 
   nextjs:
     build: ./frontend
