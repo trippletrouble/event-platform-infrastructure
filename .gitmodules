@@ -5,5 +5,5 @@
 	path = backend
 	url = https://gitlab.hof-university.de/events/backend.git
 [submodule "image-service"]
-    path = image-service
-    url = https://gitlab.hof-university.de/events/image-service.git
+	path = image-service
+	url = https://gitlab.hof-university.de/events/image-service
