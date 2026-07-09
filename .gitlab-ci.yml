@@ -124,7 +124,7 @@ frontend-lint:
 deploy-dev:
   <<: *deploy_template
   script:
-    - ssh $SSH_USER@$SSH_HOST "cd /home/student/event-planning-dev && git fetch origin && git checkout develop && git pull && docker compose -p event-dev up -d --build --remove-orphans"
+    - ssh $SSH_USER@$SSH_HOST "cd /home/student/event-planning-dev && sudo -n chown -R $SSH_USER:$SSH_USER . || true && git fetch origin && git checkout develop && git pull && docker compose -p event-dev up -d --build --remove-orphans"
   rules:
     - if: '$CI_COMMIT_BRANCH == "develop"'
   dependencies: []
@@ -132,8 +132,9 @@ deploy-dev:
 deploy-prod:
   <<: *deploy_template
   script:
-    - ssh $SSH_USER@$SSH_HOST "cd /home/student/event-planning-prod && git fetch origin && git checkout master && git pull && docker compose -p event-prod up -d --build --remove-orphans"
+    - ssh $SSH_USER@$SSH_HOST "cd /home/student/event-planning-prod && sudo -n chown -R $SSH_USER:$SSH_USER . || true && git fetch origin && git checkout master && git pull && docker compose -p event-prod up -d --build --remove-orphans"
   rules:
     - if: '$CI_COMMIT_BRANCH == "master"'
   dependencies: []
+
 
