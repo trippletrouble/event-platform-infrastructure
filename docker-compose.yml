@@ -6,7 +6,7 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U user -d event_db"]
+      test: [ "CMD-SHELL", "pg_isready -U user -d event_db" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -17,9 +17,7 @@ services:
     volumes:
       - postgres:/var/lib/postgresql/data
     profiles:
-      - 'db-standalone'
       - ''
-
 
   nestjs:
     env_file:
@@ -29,10 +27,6 @@ services:
       dockerfile: Dockerfile
     environment:
       - DATABASE_URL=${POSTGRES_URL}
-    #extra_hosts:
-    #  - "auth.ocaens.de:host-gateway"
-    volumes:
-      - uploads:/app/uploads
     ports:
       - '${BACKEND_PORT}:3100'
     networks:
@@ -40,9 +34,7 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-
     profiles:
-      - 'backend-standalone'
       - ''
 
   prism:
@@ -64,7 +56,6 @@ services:
     networks:
       - events
     profiles:
-      - 'frontend-standalone'
       - ''
 
   minio:
@@ -74,19 +65,48 @@ services:
       - MINIO_ROOT_USER=${MINIO_ACCESS_KEY}
       - MINIO_ROOT_PASSWORD=${MINIO_SECRET_KEY}
     healthcheck:
-      test: ["CMD", "mc", "ready", "local"]
+      test: [ "CMD", "mc", "ready", "local" ]
       interval: 10s
       timeout: 5s
       retries: 5
     ports:
-      - '${MINIO_PORT:-9000}:9000'
+      - '${MINIO_PORT:-9100}:9000'
       - '9001:9001'
     networks:
       - events
     volumes:
       - minio:/data
     profiles:
-      - 'minio-standalone'
+      - ''
+
+  image-service:
+    build:
+      context: ./image-service
+      dockerfile: Dockerfile
+    environment:
+      - MINIO_PUBLIC_ENDPOINT=${MINIO_PUBLIC_ENDPOINT:-}
+      - MINIO_PUBLIC_PORT=${MINIO_PUBLIC_PORT:-443}
+      - MINIO_PUBLIC_USE_SSL=${MINIO_PUBLIC_USE_SSL:-true}
+      - MINIO_ENDPOINT=dev-minio
+      - MINIO_PORT=9000
+      - MINIO_USE_SSL=false
+      - MINIO_ACCESS_KEY=${MINIO_ACCESS_KEY}
+      - MINIO_SECRET_KEY=${MINIO_SECRET_KEY}
+      - MINIO_BUCKET=${MINIO_BUCKET:-mino}
+      - IMAGE_SERVICE_PORT=${IMAGE_SERVICE_PORT}
+    healthcheck:
+      test: [ "CMD-SHELL", "wget --spider -q http://localhost:3200/images/health || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+      - '${IMAGE_SERVICE_PORT:-3200}:3200'
+    networks:
+      - events
+    depends_on:
+      minio:
+        condition: service_healthy
+    profiles:
       - ''
 
 networks:

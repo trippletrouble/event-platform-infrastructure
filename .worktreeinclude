@@ -1,0 +1,6 @@
+.env
+backend/.env
+frontend/.env
+frontend/
+backend/
+image-service/
