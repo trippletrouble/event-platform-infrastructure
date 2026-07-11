@@ -124,9 +124,11 @@ frontend-lint:
 deploy-dev:
   <<: *deploy_template
   script:
-    - ssh $SSH_USER@$SSH_HOST "cd /home/student/event-planning-dev && git fetch origin && git checkout develop && git pull && docker compose -p event-dev up -d --build --remove-orphans"
+    - ssh $SSH_USER@$SSH_HOST "cd /home/student/event-planning-dev && git fetch origin && git checkout $CI_COMMIT_BRANCH && git pull && git submodule update --init --recursive && docker compose -p event-dev up -d --build --remove-orphans"
   rules:
     - if: '$CI_COMMIT_BRANCH == "develop"'
+    - if: '$CI_COMMIT_BRANCH =~ /^feat\//'
+      when: manual
   dependencies: []
 
 deploy-prod:
