@@ -1,9 +1,9 @@
 [submodule "frontend"]
 	path = frontend
-	url = https://gitlab.hof-university.de/events/frontend.git
+	url = ../frontend.git
 [submodule "backend"]
 	path = backend
-	url = https://gitlab.hof-university.de/events/backend.git
+	url = ../backend.git
 [submodule "image-service"]
 	path = image-service
-	url = https://gitlab.hof-university.de/events/image-service
+	url = ../image-service.git
