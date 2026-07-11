@@ -147,6 +147,7 @@ deploy-dev:
         git config --global --remove-section url."https://gitlab-ci-token:***@gitlab.hof-university.de/"
         docker compose -p event-dev up -d --build --remove-orphans
         docker image prune -f
+        docker volume rm \$(docker volume ls -q -f name=runner-) || true
       EOF
   rules:
     - if: '$CI_COMMIT_BRANCH == "develop"'
@@ -170,6 +171,7 @@ deploy-prod:
         git config --global --remove-section url."https://gitlab-ci-token:***@gitlab.hof-university.de/"
         docker compose -p event-prod up -d --build --remove-orphans
         docker image prune -f
+        docker volume rm \$(docker volume ls -q -f name=runner-) || true
       EOF
   rules:
     - if: '$CI_COMMIT_BRANCH == "master"'
