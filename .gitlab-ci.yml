@@ -146,6 +146,7 @@ deploy-dev:
         git submodule update --init --recursive
         git config --global --remove-section url."https://gitlab-ci-token:***@gitlab.hof-university.de/"
         docker compose -p event-dev up -d --build --remove-orphans
+        docker image prune -f
       EOF
   rules:
     - if: '$CI_COMMIT_BRANCH == "develop"'
@@ -168,6 +169,7 @@ deploy-prod:
         git submodule update --init --recursive
         git config --global --remove-section url."https://gitlab-ci-token:***@gitlab.hof-university.de/"
         docker compose -p event-prod up -d --build --remove-orphans
+        docker image prune -f
       EOF
   rules:
     - if: '$CI_COMMIT_BRANCH == "master"'
