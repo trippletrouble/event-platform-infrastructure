@@ -117,20 +117,6 @@ frontend-lint:
     - eval $(ssh-agent -s)
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
-    - echo "--- CI Debugging ---"
-    - echo "Variable exists:"
-    - '[ -n "$SSH_PRIVATE_KEY" ] && echo "Yes" || echo "No"'
-    - echo "First 15 chars:"
-    - echo "$SSH_PRIVATE_KEY" | head -c 15 ; echo ""
-    - echo "Last 15 chars:"
-    - echo "$SSH_PRIVATE_KEY" | tail -c 15 ; echo ""
-    - echo "Number of lines:"
-    - echo "$SSH_PRIVATE_KEY" | wc -l
-    - echo "Character count:"
-    - echo -n "$SSH_PRIVATE_KEY" | wc -c
-    - echo "MD5 sum:"
-    - echo -n "$SSH_PRIVATE_KEY" | tr -d '\r' | md5sum
-    - echo "--- End Debugging ---"
     - |
       if [ -f "$SSH_PRIVATE_KEY" ]; then
         chmod 600 "$SSH_PRIVATE_KEY"
