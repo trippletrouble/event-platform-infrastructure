@@ -115,26 +115,65 @@ frontend-lint:
   before_script:
     - apk add --no-cache openssh-client git
     - eval $(ssh-agent -s)
-    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
+    - |
+      if [ -f "$SSH_PRIVATE_KEY" ]; then
+        chmod 600 "$SSH_PRIVATE_KEY"
+        ssh-add "$SSH_PRIVATE_KEY"
+      else
+        echo "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_deploy
+        echo "" >> ~/.ssh/id_deploy
+        chmod 600 ~/.ssh/id_deploy
+        ssh-add ~/.ssh/id_deploy
+        rm -f ~/.ssh/id_deploy
+      fi
     - ssh-keyscan -H "$SSH_HOST" >> ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
 
 deploy-dev:
   <<: *deploy_template
   script:
-    - ssh $SSH_USER@$SSH_HOST "cd /home/student/event-planning-dev && sudo -n chown -R $SSH_USER:$SSH_USER . || true && git fetch origin && git checkout develop && git pull && docker compose -p event-dev up -d --build --remove-orphans"
+    - |
+      ssh $SSH_USER@$SSH_HOST << EOF
+        cd /home/student/event-planning-dev
+        git remote set-url origin https://gitlab.hof-university.de/events/infrastructure.git
+        git config --global url."https://gitlab-ci-token:***@gitlab.hof-university.de/".insteadOf "https://gitlab.hof-university.de/"
+        git fetch origin
+        git checkout $CI_COMMIT_BRANCH
+        git pull
+        git submodule sync --recursive
+        git submodule update --init --recursive
+        git config --global --remove-section url."https://gitlab-ci-token:***@gitlab.hof-university.de/"
+        docker compose -p event-dev up -d --build --remove-orphans
+        docker image prune -f
+        docker volume rm \$(docker volume ls -q -f name=runner-) || true
+      EOF
   rules:
     - if: '$CI_COMMIT_BRANCH == "develop"'
+    - if: '$CI_COMMIT_BRANCH =~ /^feat\//'
+      when: manual
   dependencies: []
 
 deploy-prod:
   <<: *deploy_template
   script:
-    - ssh $SSH_USER@$SSH_HOST "cd /home/student/event-planning-prod && sudo -n chown -R $SSH_USER:$SSH_USER . || true && git fetch origin && git checkout master && git pull && docker compose -p event-prod up -d --build --remove-orphans"
+    - |
+      ssh $SSH_USER@$SSH_HOST << EOF
+        cd /home/student/event-planning-prod
+        git remote set-url origin https://gitlab.hof-university.de/events/infrastructure.git
+        git config --global url."https://gitlab-ci-token:***@gitlab.hof-university.de/".insteadOf "https://gitlab.hof-university.de/"
+        git fetch origin
+        git checkout master
+        git pull
+        git submodule sync --recursive
+        git submodule update --init --recursive
+        git config --global --remove-section url."https://gitlab-ci-token:***@gitlab.hof-university.de/"
+        docker compose -p event-prod up -d --build --remove-orphans
+        docker image prune -f
+        docker volume rm \$(docker volume ls -q -f name=runner-) || true
+      EOF
   rules:
     - if: '$CI_COMMIT_BRANCH == "master"'
   dependencies: []
-
 
